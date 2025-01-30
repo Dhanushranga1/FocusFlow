@@ -3,22 +3,35 @@
 @tailwind utilities;
 
 :root {
-  --background: #F5F5F5;
-  --foreground: #263238;
-  --primary: #80DEEA;
-  --secondary: #B2EBF2;
-  --accent: #FFCCBC;
+  --background: #0B132B;
+  --foreground: #F8F9FA;
+  --primary: #3A86FF;
+  --secondary: #00F5D4;
+  --accent: #8338EC;
+  --motivation: #FF9F1C;
+  --urgency: #FF0054;
 }
 
 body {
-  background: linear-gradient(to bottom, #E0F7FA, #B2EBF2);
+  background: linear-gradient(to bottom, #0B132B, #1C2541);
   color: var(--foreground);
   font-family: 'Inter', sans-serif;
   margin: 0;
   padding: 0;
 }
 
-/* Custom animations */
+/* Glowing Text Effect */
+.glow-text {
+  text-shadow: 0px 0px 10px var(--primary);
+}
+
+/* Blurred Glass Effect */
+.glass-effect {
+  background: rgba(28, 37, 65, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+/* Custom Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;

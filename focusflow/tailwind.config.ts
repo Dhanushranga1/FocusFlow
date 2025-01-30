@@ -9,17 +9,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
-        primary: '#4F46E5', // Indigo
-        secondary: '#A78BFA', // Soft Purple
-        dark: {
-          100: '#0F172A', // Deep Navy
-          200: '#1E293B', // Charcoal
-        },
+        background: '#0B132B',
+        foreground: '#F8F9FA',
+        primary: '#3A86FF',
+        secondary: '#00F5D4',
+        accent: '#8338EC',
+        motivation: '#FF9F1C',
+        urgency: '#FF0054',
       },
       backgroundImage: {
-        'gradient-dark': 'linear-gradient(to bottom, #0F172A, #1E293B)',
+        'gradient-dark': 'linear-gradient(to bottom, #0B132B, #1C2541)',
       },
     },
   },

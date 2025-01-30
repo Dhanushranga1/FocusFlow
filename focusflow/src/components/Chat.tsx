@@ -1,12 +1,12 @@
 // src/components/Chat.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import AnimatedContainer from './AnimatedContainer';
+import { motion } from 'framer-motion';
 
 export default function Chat() {
   const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>(
@@ -57,16 +57,24 @@ export default function Chat() {
   };
 
   return (
-    <AnimatedContainer>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="flex flex-col h-full p-4 space-y-4"
+    >
       <Card>
         <CardHeader>
-          <CardTitle>Chat with LLaMA 3</CardTitle>
+          <CardTitle className="glow-text">Chat with LLaMA 3</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-4 h-96 overflow-y-auto">
             {messages.map((msg, index) => (
-              <div
+              <motion.div
                 key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
                 className={`flex ${
                   msg.isUser ? 'justify-end' : 'justify-start'
                 }`}
@@ -85,7 +93,7 @@ export default function Chat() {
                   </Avatar>
                   <p>{msg.text}</p>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
           {error && (
@@ -105,6 +113,6 @@ export default function Chat() {
           </div>
         </CardContent>
       </Card>
-    </AnimatedContainer>
+    </motion.div>
   );
 }
