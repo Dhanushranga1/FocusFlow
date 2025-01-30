@@ -1,8 +1,7 @@
-// src/components/TaskInput.tsx
+// src/components/TaskInput.tsx - Ensuring Task Saving to Database
 'use client';
 
-import { useContext, useState } from 'react';
-import { TaskContext } from '@/context/TaskContext';
+import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,15 +13,31 @@ export default function TaskInput() {
   const [description, setDescription] = useState('');
   const [deadline, setDeadline] = useState('');
   const [priority, setPriority] = useState<'Low' | 'Medium' | 'High'>('Medium');
-  const { addTask } = useContext(TaskContext);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    addTask({ title, description, deadline, priority });
-    setTitle('');
-    setDescription('');
-    setDeadline('');
-    setPriority('Medium');
+    setError(null);
+    try {
+      const response = await fetch('/api/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, description, deadline, priority }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save task');
+      }
+
+      setTitle('');
+      setDescription('');
+      setDeadline('');
+      setPriority('Medium');
+    } catch (err) {
+      setError('Failed to save task. Please try again.');
+    }
   };
 
   return (
@@ -32,6 +47,7 @@ export default function TaskInput() {
           <CardTitle>Add Task</CardTitle>
         </CardHeader>
         <CardContent>
+          {error && <p className="text-red-500 text-sm">{error}</p>}
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               value={title}

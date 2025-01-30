@@ -1,46 +1,55 @@
-// src/app/page.tsx
+// src/app/page.tsx - Refined AI Tech Startup UI (Without Three.js)
 import Chat from '@/components/Chat';
 import TaskInput from '@/components/TaskInput';
 import PomodoroClock from '@/components/PomodoroClock';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import XPTracker from '@/components/XPTracker';
+import Hero from '@/components/Hero';
+import Leaderboard from '@/components/Leaderboard';
+import Notifications from '@/components/Notifications';
+import SocialFeed from '@/components/SocialFeed';
+import PendingTasks from '@/components/PendingTasks';
 import AnimatedContainer from '@/components/AnimatedContainer';
-import { Inter, Poppins } from 'next/font/google';
-
-const inter = Inter({ subsets: ['latin'] });
-const poppins = Poppins({ weight: '700', subsets: ['latin'] });
+import { Container, Grid, Paper, Box } from '@mui/material';
 
 export default function Home() {
   return (
-    <div className="min-h-screen p-8 bg-gradient-to-b from-[#E0F7FA] to-[#B2EBF2]">
-      {/* Hero Section */}
+    <Box className="relative min-h-screen w-full bg-gradient-to-br from-[#1E1E3F] via-[#3A86FF] to-[#00F5D4] text-white flex flex-col items-center overflow-hidden">
+      {/* Background Glow Effect */}
+      <Box className="absolute inset-0 w-full h-full bg-[radial-gradient(circle,#3A86FF,#1E1E3F)] opacity-40 blur-3xl" />
+      
       <AnimatedContainer>
-        <div className="text-center mb-12">
-          <h1 className={`${poppins.className} text-6xl font-bold text-[#263238] mb-4`}>
-            FocusFlow
-          </h1>
-          <p className={`${inter.className} text-xl text-[#455A64]`}>
-            Your AI-powered productivity coach. Stay focused, achieve more.
-          </p>
-        </div>
+        <Hero />
       </AnimatedContainer>
 
-      {/* Main Content */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Left Panel: Pomodoro Clock */}
-        <div className="md:col-span-1">
-          <PomodoroClock />
-        </div>
+      <Container maxWidth="xl" className="relative py-16 flex flex-col items-center space-y-12 z-10">
+        <Grid container spacing={8} justifyContent="center">
+          <Grid item xs={12} md={4}>
+            <Paper elevation={10} className="p-8 rounded-2xl shadow-lg bg-opacity-95 backdrop-blur-lg border border-[#00F5D4] hover:shadow-cyan-500 transition-all duration-300">
+              <PomodoroClock />
+              <XPTracker />
+              <Leaderboard />
+            </Paper>
+          </Grid>
 
-        {/* Middle Panel: Chat */}
-        <div className="md:col-span-1">
-          <Chat />
-        </div>
+          <Grid item xs={12} md={4}>
+            <Paper elevation={10} className="p-8 rounded-2xl shadow-lg bg-opacity-95 backdrop-blur-lg border border-[#FF9F1C] hover:shadow-orange-500 transition-all duration-300">
+              <Chat />
+              <Notifications />
+            </Paper>
+          </Grid>
 
-        {/* Right Panel: Task Input */}
-        <div className="md:col-span-1">
-          <TaskInput />
-        </div>
-      </div>
-    </div>
+          <Grid item xs={12} md={4}>
+            <Paper elevation={10} className="p-8 rounded-2xl shadow-lg bg-opacity-95 backdrop-blur-lg border border-[#8338EC] hover:shadow-purple-500 transition-all duration-300">
+              <TaskInput />
+              <SocialFeed />
+            </Paper>
+          </Grid>
+        </Grid>
+
+        <AnimatedContainer delay={0.5}>
+          <PendingTasks />
+        </AnimatedContainer>
+      </Container>
+    </Box>
   );
 }

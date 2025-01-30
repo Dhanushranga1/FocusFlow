@@ -1,33 +1,41 @@
-// src/app/api/chat/route.ts
+// src/app/api/tasks/route.ts - Fixing getDB Reference Error and Ensuring Task Table Creation
 import { NextResponse } from 'next/server';
+import sqlite3 from 'sqlite3';
+import { open } from 'sqlite';
+
+async function getDB() {
+  const db = await open({
+    filename: './database.sqlite',
+    driver: sqlite3.Database,
+  });
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS tasks (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      description TEXT,
+      priority TEXT CHECK (priority IN ('Low', 'Medium', 'High')),
+      status TEXT CHECK (status IN ('To-Do', 'In Progress', 'Completed')) DEFAULT 'To-Do',
+      deadline TEXT,
+      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+  return db;
+}
 
 export async function POST(req: Request) {
-  const { message } = await req.json();
+  const { title, description, priority, deadline } = await req.json();
+  const db = await getDB();
+  
+  const result = await db.run(
+    'INSERT INTO tasks (title, description, priority, status, deadline) VALUES (?, ?, ?, ?, ?)',
+    [title, description, priority, 'To-Do', deadline]
+  );
+  
+  return NextResponse.json({ success: true, id: result.lastID });
+}
 
-  try {
-    const response = await fetch('http://localhost:11434/api/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'llama3:latest',
-        prompt: message,
-        stream: false, // Ensure streaming is disabled for simplicity
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Ollama API error: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return NextResponse.json({ response: data.response });
-  } catch (error) {
-    console.error('Error in /api/chat:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch response from Ollama' },
-      { status: 500 }
-    );
-  }
+export async function GET() {
+  const db = await getDB();
+  const tasks = await db.all('SELECT * FROM tasks ORDER BY createdAt DESC');
+  return NextResponse.json(tasks);
 }
